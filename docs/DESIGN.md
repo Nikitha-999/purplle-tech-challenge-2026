@@ -1,0 +1,19 @@
+# Store Intelligence Design
+
+The system is split into two contracts: a detection pipeline that produces structured behavioural events, and a FastAPI intelligence service that ingests those events and computes store analytics. This keeps the highest-risk computer vision work isolated from the API scoring surface. The API can be validated with `sample_events.jsonl`, while the video processor can evolve from an OpenCV motion baseline to YOLO/ByteTrack without changing downstream metrics.
+
+The uploaded resources are mapped to `ST1008`, `Brigade_Bangalore`, on `2026-04-10`. `data/store_layout.json` encodes the visible Brigade Road floor-plan zones from the provided workbook: DermDoc, Good Vibes, Lakme, Accessories, PMU, Cash Counter, and the other branded wall bays. The CCTV archive contains five MP4 files named `CAM 1.mp4` through `CAM 5.mp4`; these are mapped to `CAM_1` through `CAM_5`. Because the workbook contains an embedded image rather than structured camera polygons, zone coverage is represented as coarse camera-to-zone metadata that can later be refined with polygon coordinates.
+
+The event model follows the challenge schema exactly: every event has a globally unique `event_id`, store and camera identifiers, a session-scoped `visitor_id`, an event type, UTC timestamp, optional zone, dwell duration, staff flag, calibrated confidence, and metadata for queue depth and zone labels. The API accepts batches of up to 500 raw dictionaries, validates each independently, and returns partial success when some rows fail. Accepted events are deduplicated by `event_id`, making retrying ingest safe.
+
+Analytics are computed from customer sessions, not raw event counts. Staff events are retained for auditability but excluded from customer metrics. Unique visitors are distinct non-staff `visitor_id` values. Funnel stages are session sets: Entry, Zone Visit, Billing Queue, and Purchase. The POS parser handles the actual item-level CSV from Brigade Bangalore by aggregating rows into invoice-level transactions. When `POS_CSV_PATH` points at that file, conversion uses the challenge rule: a visitor present in the billing/cash-counter zone within five minutes before a transaction counts as converted. Without POS data, the API falls back to billing-zone events minus abandoned sessions so local demos still work.
+
+The service exposes `/metrics`, `/funnel`, `/heatmap`, `/anomalies`, and `/health`. Health reports last event timestamps per store and marks stale feeds when lag exceeds ten minutes. Anomalies currently cover queue spikes, conversion drops, and dead zones. The dashboard is intentionally simple: it polls API endpoints every two seconds, proving that detection replay and analytics are connected in live or simulated-live mode.
+
+## AI-Assisted Decisions
+
+An LLM helped shape the initial decomposition by recommending that the API contract be made stable before adding model-specific CV code. I agreed because the challenge has an acceptance gate around `docker compose up`, ingest, metrics, and documentation. That means a correct API plus replayable events is safer than a partially working detector coupled tightly to analytics.
+
+AI also suggested using a heavyweight streaming broker for realism. I overrode that for this implementation. Kafka would be reasonable for 40 live stores, but it adds operational surface area and makes local scoring harder. The evaluation framework gives reviewers only a few minutes to run the system, so the project uses HTTP batch ingest as the first production-aware boundary while preserving event schemas that could later be moved to Kafka, Redis Streams, or NATS.
+
+For anomaly detection, AI initially proposed statistical baselines using seven days of historical data. The provided challenge clips are short, so this repo uses deterministic thresholds plus clear suggested actions. The code leaves room for a rolling baseline once real historical events are available.

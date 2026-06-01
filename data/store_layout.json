@@ -1,0 +1,48 @@
+{
+  "store_id": "ST1008",
+  "store_name": "Brigade_Bangalore",
+  "city": "Bangalore",
+  "business_date": "2026-04-10",
+  "open_hours": {
+    "local_timezone": "Asia/Kolkata",
+    "opens": "10:00",
+    "closes": "22:00"
+  },
+  "entry_zone": {
+    "zone_id": "ENTRY_EXIT",
+    "description": "Main left-side entrance threshold from Brigade Road layout"
+  },
+  "billing_zone": {
+    "zone_id": "CASH_COUNTER",
+    "aliases": ["BILLING", "CASH", "CHECKOUT"]
+  },
+  "cameras": [
+    {"camera_id": "CAM_1", "filename": "CAM 1.mp4", "coverage": ["ENTRY_EXIT", "F.O.H"]},
+    {"camera_id": "CAM_2", "filename": "CAM 2.mp4", "coverage": ["F.O.H", "MAKEUP_UNIT"]},
+    {"camera_id": "CAM_3", "filename": "CAM 3.mp4", "coverage": ["CASH_COUNTER", "PMU"]},
+    {"camera_id": "CAM_4", "filename": "CAM 4.mp4", "coverage": ["TOP_WALL_ZONES"]},
+    {"camera_id": "CAM_5", "filename": "CAM 5.mp4", "coverage": ["BOTTOM_WALL_ZONES"]}
+  ],
+  "zones": [
+    {"zone_id": "EB_KOREAN", "label": "EB Korean", "category": "skin"},
+    {"zone_id": "THE_FACE_SHOP", "label": "The Face Shop", "category": "skin"},
+    {"zone_id": "GOOD_VIBES", "label": "Good Vibes", "category": "skin"},
+    {"zone_id": "DERMDOC", "label": "DermDoc", "category": "bath-and-body"},
+    {"zone_id": "MINIMALIST", "label": "Minimalist", "category": "skin"},
+    {"zone_id": "AQUALOGICA", "label": "Aqualogica", "category": "skin"},
+    {"zone_id": "LAKME_SKIN", "label": "Lakme Skin", "category": "skin"},
+    {"zone_id": "ACCESSORIES", "label": "Accessories", "category": "accessories"},
+    {"zone_id": "CASH_COUNTER", "label": "Cash Counter", "category": "billing"},
+    {"zone_id": "PMU", "label": "PMU", "category": "makeup"},
+    {"zone_id": "MAYBELLINE", "label": "Maybelline", "category": "makeup"},
+    {"zone_id": "FACES_CANADA", "label": "Faces Canada", "category": "makeup"},
+    {"zone_id": "LAKME", "label": "Lakme", "category": "makeup"},
+    {"zone_id": "COLORBAR_SUGAR", "label": "Colorbar + Sugar", "category": "makeup"},
+    {"zone_id": "SWISS_BEAUTY", "label": "Swiss Beauty", "category": "makeup"},
+    {"zone_id": "RENEE_NY_BAE", "label": "Renee NY Bae", "category": "makeup"},
+    {"zone_id": "ALPS_GOODNESS", "label": "Alps Goodness", "category": "personal-care"},
+    {"zone_id": "STREAX", "label": "Streax", "category": "hair"},
+    {"zone_id": "MAKEUP_UNIT", "label": "Makeup Unit", "category": "makeup"},
+    {"zone_id": "F.O.H", "label": "Front of House", "category": "floor"}
+  ]
+}
