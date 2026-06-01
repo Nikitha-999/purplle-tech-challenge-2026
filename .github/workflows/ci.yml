@@ -7,10 +7,14 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,7 +28,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=app --cov=pipeline --cov-report=term-missing --cov-fail-under=70
+          python -m pytest --cov=app --cov=pipeline --cov-report=term-missing --cov-fail-under=70
 
       - name: Validate Docker Compose
         run: |
